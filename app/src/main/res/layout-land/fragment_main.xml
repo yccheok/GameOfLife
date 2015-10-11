@@ -43,6 +43,7 @@
         android:paddingBottom="2dp"
         android:stretchMode="columnWidth"
         android:background="#ffc0c0c0"
+        android:scrollbars="none"
         android:layout_gravity="center"
         android:gravity="center" />
 
