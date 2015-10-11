@@ -70,11 +70,12 @@ public class SimulationFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        // Will be triggered during back button pressed.
+    public void onPause() {
+        // Will be triggered during rotation, home button and back button pressed.
         super.onDestroy();
         stop();
     }
+
 
     public void clear() {
         cells = new Cells(20, 20);
