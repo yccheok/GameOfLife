@@ -49,6 +49,7 @@ public class MainActivityTest
         simulationFragment.start();
         assertThat(simulationFragment.isStart(), is(true));
         activity.finish();
+        getInstrumentation().waitForIdleSync();
         assertThat(simulationFragment.isStart(), is(false));
     }
 }
