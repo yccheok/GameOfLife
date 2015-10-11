@@ -73,6 +73,8 @@ public class BasicEngine implements Engine {
                 if (cells.getCell(_r, _c).isAlive()) {
                     aliveNeighbourSize++;
                 }
+
+                cell.setAliveNeighbourSize(aliveNeighbourSize);
             }
         }
 
