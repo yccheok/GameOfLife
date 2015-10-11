@@ -30,6 +30,10 @@ public class Cells {
         return this.col;
     }
 
+    public List<Cell> getList() {
+        return cells;
+    }
+
     private final List<Cell> cells = new ArrayList<>();
     private final int row;
     private final int col;
