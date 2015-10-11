@@ -9,15 +9,26 @@
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="START"
-            android:id="@+id/button" />
+            android:text="Start"
+            android:id="@+id/start_button" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Random"
+            android:id="@+id/random_button" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clear"
+            android:id="@+id/clear_button" />
     </LinearLayout>
     
     <GridView

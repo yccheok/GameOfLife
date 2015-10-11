@@ -36,6 +36,7 @@ public class MainActivityFragment extends Fragment implements CellsListener {
             // Tell it who it is working with.
             simulationFragment.setTargetFragment(this, 0);
             fm.beginTransaction().add(simulationFragment, SIMULATION_FRAGMENT).commitAllowingStateLoss();
+            simulationFragment.random();
         } else {
             simulationFragment.setTargetFragment(this, 0);
         }
@@ -67,23 +68,47 @@ public class MainActivityFragment extends Fragment implements CellsListener {
             }
         });
 
-        final Button button = (Button) view.findViewById(R.id.button);
-        button.setText(simulationFragment.isStart() ? "STOP" : "START");
-        button.setOnClickListener(new View.OnClickListener() {
+        final Button startButton = (Button) view.findViewById(R.id.start_button);
+        startButton.setText(simulationFragment.isStart() ? "STOP" : "START");
+        startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (simulationFragment.isStart()) {
-                    button.setText("START");
+                    startButton.setText("Start");
                     simulationFragment.stop();
                 } else {
-                    button.setText("STOP");
+                    startButton.setText("Stop");
                     simulationFragment.start();
                 }
             }
         });
 
-            return view;
-        }
+        final Button randomButton = (Button) view.findViewById(R.id.random_button);
+        randomButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (simulationFragment.isStart()) {
+                    Toast.makeText(MainActivityFragment.this.getContext(), "Press stop first", Toast.LENGTH_SHORT).show();
+                } else {
+                    simulationFragment.random();
+                }
+            }
+        });
+
+        final Button clearButton = (Button) view.findViewById(R.id.clear_button);
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (simulationFragment.isStart()) {
+                    Toast.makeText(MainActivityFragment.this.getContext(), "Press stop first", Toast.LENGTH_SHORT).show();
+                } else {
+                    simulationFragment.clear();
+                }
+            }
+        });
+
+        return view;
+    }
 
         @Override
     public void update(final Cells cells) {
@@ -92,6 +117,11 @@ public class MainActivityFragment extends Fragment implements CellsListener {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    CellAdapter cellAdapter = MainActivityFragment.this.cellAdapter;
+
+                    if (cellAdapter == null) {
+                        return;
+                    }
                     cellAdapter.clear();
                     cellAdapter.addAll(cells.getList());
                     cellAdapter.notifyDataSetChanged();
