@@ -5,10 +5,13 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.Toast;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -21,13 +24,6 @@ public class MainActivityFragment extends Fragment implements CellsListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        cells.getCell(4, 5).setAlive(true);
-        cells.getCell(4, 6).setAlive(true);
-        cells.getCell(5, 6).setAlive(true);
-        cells.getCell(5, 7).setAlive(true);
-        cells.getCell(5, 8).setAlive(true);
-        cells.getCell(6, 7).setAlive(true);
 
         final FragmentManager fm = getFragmentManager();
 
@@ -52,28 +48,44 @@ public class MainActivityFragment extends Fragment implements CellsListener {
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
         this.gridView = (GridView)view.findViewById(R.id.grid_view);
 
-        this.cellAdapter = new CellAdapter(this.getActivity(), cells.getList());
+        this.cellAdapter = new CellAdapter(this.getActivity(), simulationFragment.getCells().getList());
         this.cellAdapter.setNotifyOnChange(false);
         gridView.setAdapter(cellAdapter);
 
-        final Button button = (Button)view.findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View view) {
-                if (button.getText().equals("START")) {
-                    button.setText("STOP");
-                    simulationFragment.start(cells);
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+                                    long arg3) {
+                if (simulationFragment.isStart()) {
+                    Toast.makeText(MainActivityFragment.this.getContext(), "Press stop first", Toast.LENGTH_SHORT).show();
                 } else {
-                    button.setText("START");
-                    simulationFragment.stop();
+                    final CellAdapter cellAdapter = (CellAdapter) gridView.getAdapter();
+                    Cell cell = cellAdapter.getItem(position);
+                    cell.setAlive(!cell.isAlive());
+                    cellAdapter.notifyDataSetChanged();
                 }
             }
         });
 
-        return view;
-    }
+        final Button button = (Button) view.findViewById(R.id.button);
+        button.setText(simulationFragment.isStart() ? "STOP" : "START");
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (simulationFragment.isStart()) {
+                    button.setText("START");
+                    simulationFragment.stop();
+                } else {
+                    button.setText("STOP");
+                    simulationFragment.start();
+                }
+            }
+        });
 
-    @Override
+            return view;
+        }
+
+        @Override
     public void update(final Cells cells) {
         Activity activity = getActivity();
         if (activity != null) {
@@ -88,7 +100,6 @@ public class MainActivityFragment extends Fragment implements CellsListener {
         }
     }
 
-    private Cells cells = new Cells(20, 20);
     private GridView gridView;
     private CellAdapter cellAdapter;
     private static final String SIMULATION_FRAGMENT = "SIMULATION_FRAGMENT";

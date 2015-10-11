@@ -23,17 +23,18 @@ public class SimulationFragment extends Fragment {
         setRetainInstance(true);
     }
 
-    public void start(final Cells cells) {
+    public void start() {
+        flag = true;
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Cells c = cells;
                 while (flag) {
-                    c = engine.nextGen(c);
+                    cells = engine.nextGen(cells);
 
                     Fragment fragment = SimulationFragment.this.getTargetFragment();
                     if (fragment instanceof CellsListener) {
-                        ((CellsListener)fragment).update(c);
+                        ((CellsListener)fragment).update(cells);
                     }
 
                     try {
@@ -45,7 +46,6 @@ public class SimulationFragment extends Fragment {
             }
         });
 
-        flag = true;
         thread.start();
         this.thread = thread;
     }
@@ -59,6 +59,14 @@ public class SimulationFragment extends Fragment {
         }
     }
 
+    public boolean isStart() {
+        return flag;
+    }
+
+    public Cells getCells() {
+        return this.cells;
+    }
+
     @Override
     public void onDestroy() {
         // Will be triggered during back button pressed.
@@ -66,7 +74,8 @@ public class SimulationFragment extends Fragment {
         stop();
     }
 
-    private volatile boolean flag = true;
+    private volatile boolean flag = false;
     private Thread thread = null;
     private Engine engine = new BasicEngine();
+    private Cells cells = new Cells(20, 20);
 }
